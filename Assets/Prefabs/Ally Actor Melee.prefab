@@ -14,12 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthMeter: {fileID: 8253792137898998348}
   navigator: {fileID: 8253792138596183349}
+  table: {fileID: 6379649828364294528}
   health: 100
   maxHealth: 100
   speedFactor: 2
   range: 2
   attackDelay: 1
   attackDamage: 10
+--- !u!114 &6379649828364294528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8253792138727837053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab22f19ab13369d4cb096fa40e4697b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entries:
+  - name: Disabled
+    weight: 0
+    result: 0
+  - name: Traveling
+    weight: 0
+    result: 1
+  - name: Attacking Unit
+    weight: 5
+    result: 2
+  - name: Attacking Building
+    weight: 7
+    result: 3
+  - name: Defending Building
+    weight: 2
+    result: 4
+  - name: Taunting
+    weight: 4
+    result: 5
 --- !u!1001 &2022940321664446352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -103,7 +135,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2318679334353188106, guid: aef2ebdf12a1e8442a79c8c2f13e1124, type: 3}
       propertyPath: m_Name
-      value: Melee Combat Actor
+      value: Ally Actor Melee
       objectReference: {fileID: 0}
     - target: {fileID: 2318679334353188107, guid: aef2ebdf12a1e8442a79c8c2f13e1124, type: 3}
       propertyPath: m_RootOrder

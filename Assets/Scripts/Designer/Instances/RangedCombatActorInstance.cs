@@ -49,6 +49,7 @@ namespace AI_Midterm_RTS.Designer.Instances
                 instance = RangedCombatActor.MakeActor();
                 instance.HealthMeter = healthMeter;
                 instance.Navigator = navigator;
+                instance.StateTable = table.Unwrap();
                 instance.Health = health;
                 instance.MaxHealth = maxHealth;
                 instance.SpeedFactor = speedFactor;
@@ -56,6 +57,8 @@ namespace AI_Midterm_RTS.Designer.Instances
                 instance.FireDelay = fireDelay;
                 instance.ShotSpeed = shotSpeed;
                 instance.ShotDamage = shotDamage;
+                // Initialize the state of this actor.
+                instance.EvaluateStateChange();
             }
             return instance;
         }

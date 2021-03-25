@@ -18,6 +18,8 @@ namespace AI_Midterm_RTS.Designer.Instances
         [SerializeField] protected UnityMeter healthMeter = default;
         [Tooltip("The navigation used by this actor.")]
         [SerializeField] protected UnityNavigator navigator = default;
+        [Tooltip("The base weighted table for this actor.")]
+        [SerializeField] protected CombatActorStateWeightedTableInstance table = default;
         [Header("Combat Actor Attributes")]
         [Tooltip("The starting health for this unit.")]
         [SerializeField] protected float health = 100f;

@@ -6,6 +6,7 @@ using AI_Midterm_RTS.AICore;
 using AI_Midterm_RTS.Indicators;
 using AI_Midterm_RTS.Navigation;
 using AI_Midterm_RTS.Commanders;
+using AI_Midterm_RTS.AICore.Distributions;
 
 namespace AI_Midterm_RTS.AIActors
 {
@@ -99,6 +100,10 @@ namespace AI_Midterm_RTS.AIActors
         /// The type of actor this is.
         /// </summary>
         public CombatActorType Type => type;
+        /// <summary>
+        /// Dictates the likeliness of state changes.
+        /// </summary>
+        public WeightedTable<State> StateTable { get; set; }
         /// <summary>
         /// The location of this actor. Setting this value
         /// directly will teleport the actor.

@@ -45,12 +45,15 @@ namespace AI_Midterm_RTS.Designer.Instances
                 instance = AOECombatActor.MakeActor();
                 instance.HealthMeter = healthMeter;
                 instance.Navigator = navigator;
+                instance.StateTable = table.Unwrap();
                 instance.Health = health;
                 instance.MaxHealth = maxHealth;
                 instance.SpeedFactor = speedFactor;
                 instance.AttackDelay = delay;
                 instance.AttackRadius = radius;
                 instance.AttackDamage = damage;
+                // Initialize the state of this actor.
+                instance.EvaluateStateChange();
             }
             return instance;
         }

@@ -14,12 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthMeter: {fileID: 1716810020161953164}
   navigator: {fileID: 1716810021076716277}
+  table: {fileID: 4073266849924417898}
   health: 100
   maxHealth: 100
   speedFactor: 1
   delay: 5
   radius: 5
   damage: 20
+--- !u!114 &4073266849924417898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716810020944669373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab22f19ab13369d4cb096fa40e4697b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entries:
+  - name: Disabled
+    weight: 0
+    result: 0
+  - name: Traveling
+    weight: 0
+    result: 1
+  - name: Attacking Unit
+    weight: 5
+    result: 2
+  - name: Attacking Building
+    weight: 3
+    result: 3
+  - name: Defending Building
+    weight: 0
+    result: 4
+  - name: Taunting
+    weight: 3
+    result: 5
 --- !u!1001 &4034889982875202778
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -103,7 +135,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2318679334353188106, guid: aef2ebdf12a1e8442a79c8c2f13e1124, type: 3}
       propertyPath: m_Name
-      value: Combat Actor
+      value: Ally Actor AOE
       objectReference: {fileID: 0}
     - target: {fileID: 2318679334353188107, guid: aef2ebdf12a1e8442a79c8c2f13e1124, type: 3}
       propertyPath: m_RootOrder

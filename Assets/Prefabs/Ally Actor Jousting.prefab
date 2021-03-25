@@ -14,12 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthMeter: {fileID: 1485714906635790053}
   navigator: {fileID: 1485714905637663132}
+  table: {fileID: 1080782847458637474}
   health: 100
   maxHealth: 100
   speedFactor: 1.5
   joustingRange: 10
   joustingSpeed: 3
   joustingDamage: 6
+--- !u!114 &1080782847458637474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485714905774297556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab22f19ab13369d4cb096fa40e4697b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entries:
+  - name: Disabled
+    weight: 0
+    result: 0
+  - name: Traveling
+    weight: 0
+    result: 1
+  - name: Attacking Unit
+    weight: 3
+    result: 2
+  - name: Attacking Building
+    weight: 4
+    result: 3
+  - name: Defending Building
+    weight: 7
+    result: 4
+  - name: Taunting
+    weight: 1
+    result: 5
 --- !u!1001 &3797602404055967228
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -86,7 +118,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: d862399c2bd9ac24fa8d5c5319bbe6c1, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 8cb21b96b5a22cc4cb0052116d96b2c7, type: 2}
+      objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 919132149155446097, guid: d862399c2bd9ac24fa8d5c5319bbe6c1, type: 3}
       propertyPath: m_Name
       value: JoustBot

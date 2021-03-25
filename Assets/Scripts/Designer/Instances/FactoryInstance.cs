@@ -68,7 +68,7 @@ namespace AI_Midterm_RTS.Designer.Instances
             // Initialize this factory, if not already initialized.
             if (factory == null)
             {
-                factory = new Factory(transform.position, damageRadius, health)
+                factory = new Factory(transform, damageRadius, health)
                 {
                     // Set the factory attributes.
                     CooldownSeconds = cooldownSeconds,

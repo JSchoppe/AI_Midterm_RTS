@@ -45,12 +45,15 @@ namespace AI_Midterm_RTS.Designer.Instances
                 instance = JoustingCombatActor.MakeActor();
                 instance.HealthMeter = healthMeter;
                 instance.Navigator = navigator;
+                instance.StateTable = table.Unwrap();
                 instance.Health = health;
                 instance.MaxHealth = maxHealth;
                 instance.SpeedFactor = speedFactor;
                 instance.JoustingRange = joustingRange;
                 instance.JoustingSpeed = joustingSpeed;
                 instance.JoustingDamage = joustingDamage;
+                // Initialize the state of this actor.
+                instance.EvaluateStateChange();
             }
             return instance;
         }

@@ -45,12 +45,15 @@ namespace AI_Midterm_RTS.Designer.Instances
                 instance = MeleeCombatActor.MakeActor();
                 instance.HealthMeter = healthMeter;
                 instance.Navigator = navigator;
+                instance.StateTable = table.Unwrap();
                 instance.Health = health;
                 instance.MaxHealth = maxHealth;
                 instance.SpeedFactor = speedFactor;
                 instance.Range = range;
                 instance.AttackDelay = attackDelay;
                 instance.AttackDamage = attackDamage;
+                // Initialize the state of this actor.
+                instance.EvaluateStateChange();
             }
             return instance;
         }
