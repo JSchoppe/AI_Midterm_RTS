@@ -47,9 +47,9 @@ namespace AI_Midterm_RTS.AIActors
             /// </summary>
             Disabled,
             /// <summary>
-            /// The unit is looking for another unit or base to engage with.
+            /// The unit is traveling to a point of interest.
             /// </summary>
-            Searching,
+            Traveling,
             /// <summary>
             /// The unit is attacking another target unit.
             /// </summary>
@@ -230,6 +230,14 @@ namespace AI_Midterm_RTS.AIActors
         }
         #endregion
         #region Common Methods
+        /// <summary>
+        /// Called whenever a state wants the actor to consider
+        /// changing to a different state.
+        /// </summary>
+        public virtual void EvaluateStateChange()
+        {
+
+        }
         /// <summary>
         /// Iterates and returns the opponent commanders.
         /// </summary>
