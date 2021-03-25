@@ -7,6 +7,7 @@ using AI_Midterm_RTS.Indicators;
 using AI_Midterm_RTS.Navigation;
 using AI_Midterm_RTS.Commanders;
 using AI_Midterm_RTS.AICore.Distributions;
+using AI_Midterm_RTS.Bases;
 
 namespace AI_Midterm_RTS.AIActors
 {
@@ -71,6 +72,7 @@ namespace AI_Midterm_RTS.AIActors
         #endregion
         #region Fields
         protected CombatActorType type;
+        private Transform transform;
         private Vector3 location;
         private float health;
         private float maxHealth;
@@ -80,10 +82,11 @@ namespace AI_Midterm_RTS.AIActors
         private INavigator navigator;
         #endregion
         #region Constructors
-        protected CombatActor(Dictionary<State, IState> states,
+        protected CombatActor(Transform transform, Dictionary<State, IState> states,
             float health = 100f, float maxHealth = 100f)
             : base(states)
         {
+            this.transform = transform;
             // Initialize property values.
             this.health = health;
             this.maxHealth = maxHealth;
@@ -110,7 +113,7 @@ namespace AI_Midterm_RTS.AIActors
         /// </summary>
         public Vector3 Location
         {
-            get => location;
+            get => transform.position;
             set
             {
                 if (value != location)
@@ -254,6 +257,97 @@ namespace AI_Midterm_RTS.AIActors
                 if (commander.TeamID != TeamID)
                     opponents.Add(commander);
             return opponents;
+        }
+        /// <summary>
+        /// Retrieves a collection of opponents sorted by proximity.
+        /// </summary>
+        /// <param name="commanders">The commanders to check units in.</param>
+        /// <returns>A collection of actor distance data with closest actors first.</returns>
+        protected List<ActorDistancePair> GetUnitsByProximity(List<Commander> commanders)
+        {
+            List<ActorDistancePair> opponents = new List<ActorDistancePair>();
+            // Iterate through all combat actors.
+            foreach (Commander commander in commanders)
+            {
+                foreach (CombatActor actor in commander.DeployedUnits)
+                {
+                    // Create a pair for this data.
+                    ActorDistancePair newPair = new ActorDistancePair(
+                        actor, Vector3.SqrMagnitude(actor.Location - Location));
+                    // Sort it into the collection in place.
+                    bool foundInsertionPoint = false;
+                    for (int i = 0; i < opponents.Count; i++)
+                    {
+                        if (newPair.DistanceSquared < opponents[i].DistanceSquared)
+                        {
+                            opponents.Insert(i, newPair);
+                            foundInsertionPoint = true;
+                            break;
+                        }
+                    }
+                    if (!foundInsertionPoint)
+                        opponents.Add(newPair);
+                }
+            }
+            // Return the distance ordered collection,
+            // with closest actors at the front.
+            return opponents;
+        }
+        /// <summary>
+        /// Retrieves a collection of active bases sorted by proximity.
+        /// </summary>
+        /// <param name="commanders">The commanders to check bases in.</param>
+        /// <returns>A collection of base distance data with closest bases first.</returns>
+        protected List<BaseDistancePair> GetBasesByProximity(List<Commander> commanders)
+        {
+            List<BaseDistancePair> bases = new List<BaseDistancePair>();
+            // Iterate through all bases on given commanders.
+            foreach (Commander commander in commanders)
+            {
+                foreach (Base unitBase in commander.Bases)
+                {
+                    // Create a pair for this data.
+                    BaseDistancePair newPair = new BaseDistancePair(
+                        unitBase, Vector3.SqrMagnitude(unitBase.Location - Location));
+                    // Sort it into the collection in place.
+                    bool foundInsertionPoint = false;
+                    for (int i = 0; i < bases.Count; i++)
+                    {
+                        if (newPair.DistanceSquared < bases[i].DistanceSquared)
+                        {
+                            bases.Insert(i, newPair);
+                            foundInsertionPoint = true;
+                            break;
+                        }
+                    }
+                    if (!foundInsertionPoint)
+                        bases.Add(newPair);
+                }
+            }
+            // Return the distance ordered collection,
+            // with closest actors at the front.
+            return bases;
+        }
+        // TODO document or clean up somehow.
+        protected sealed class ActorDistancePair
+        {
+            public CombatActor Actor { get; }
+            public float DistanceSquared { get; }
+            public ActorDistancePair(CombatActor actor, float distanceSquared)
+            {
+                Actor = actor;
+                DistanceSquared = distanceSquared;
+            }
+        }
+        protected sealed class BaseDistancePair
+        {
+            public Base Base { get; }
+            public float DistanceSquared { get; }
+            public BaseDistancePair(Base theBase, float distanceSquared)
+            {
+                Base = theBase;
+                DistanceSquared = distanceSquared;
+            }
         }
         #endregion
     }

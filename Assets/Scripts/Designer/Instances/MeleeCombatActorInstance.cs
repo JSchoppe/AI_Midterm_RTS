@@ -42,7 +42,7 @@ namespace AI_Midterm_RTS.Designer.Instances
             {
                 // Create the actor and set the values
                 // based on the inspector fields.
-                instance = MeleeCombatActor.MakeActor();
+                instance = MeleeCombatActor.MakeActor(transform);
                 instance.HealthMeter = healthMeter;
                 instance.Navigator = navigator;
                 instance.StateTable = table.Unwrap();

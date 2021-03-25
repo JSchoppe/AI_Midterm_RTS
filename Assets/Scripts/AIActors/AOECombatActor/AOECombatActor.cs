@@ -16,19 +16,20 @@ namespace AI_Midterm_RTS.AIActors.AOECombatActor
         private float attackRadius;
         private float attackDamage;
         #endregion
-        private AOECombatActor(Dictionary<State, IState> states)
-            : base(states)
+        private AOECombatActor(Transform transform, Dictionary<State, IState> states)
+            : base(transform, states)
         {
             type = CombatActorType.AOE;
         }
         /// <summary>
         /// Creates a new jousting combat actor with default values.
         /// </summary>
+        /// <param name="transform">The transform to attach the actor to.</param>
         /// <returns>The new instance of the jousting combat actor.</returns>
-        public static AOECombatActor MakeActor()
+        public static AOECombatActor MakeActor(Transform transform)
         {
             var states = new Dictionary<State, IState>();
-            var actor = new AOECombatActor(states);
+            var actor = new AOECombatActor(transform, states);
 
 
             return actor;

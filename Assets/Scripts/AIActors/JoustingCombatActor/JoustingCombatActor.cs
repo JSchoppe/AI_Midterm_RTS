@@ -16,19 +16,20 @@ namespace AI_Midterm_RTS.AIActors.JoustingCombatActor
         private float joustingSpeed;
         private float joustingDamage;
         #endregion
-        private JoustingCombatActor(Dictionary<State, IState> states)
-            : base(states)
+        private JoustingCombatActor(Transform transform, Dictionary<State, IState> states)
+            : base(transform, states)
         {
             type = CombatActorType.Jousting;
         }
         /// <summary>
         /// Creates a new jousting combat actor with default values.
         /// </summary>
+        /// <param name="transform">The transform to attach the actor to.</param>
         /// <returns>The new instance of the jousting combat actor.</returns>
-        public static JoustingCombatActor MakeActor()
+        public static JoustingCombatActor MakeActor(Transform transform)
         {
             var states = new Dictionary<State, IState>();
-            var actor = new JoustingCombatActor(states);
+            var actor = new JoustingCombatActor(transform, states);
 
 
             return actor;

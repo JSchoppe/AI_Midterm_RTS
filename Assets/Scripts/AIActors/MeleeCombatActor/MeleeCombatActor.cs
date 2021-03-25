@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine; // TODO wrap Mathf. Script should be engine agnostic.
 
 using AI_Midterm_RTS.AICore;
+using AI_Midterm_RTS.AIActors.States;
+using AI_Midterm_RTS.Commanders;
 
 namespace AI_Midterm_RTS.AIActors.MeleeCombatActor
 {
@@ -16,22 +18,36 @@ namespace AI_Midterm_RTS.AIActors.MeleeCombatActor
         private float attackDelay;
         private float attackDamage;
         #endregion
-        private MeleeCombatActor(Dictionary<State, IState> states)
-            : base(states)
+        private MeleeCombatActor(Transform transform, Dictionary<State, IState> states)
+            : base(transform, states)
         {
             type = CombatActorType.Melee;
         }
         /// <summary>
         /// Creates a new melee combat actor with default values.
         /// </summary>
+        /// <param name="transform">The transform to attach the actor to.</param>
         /// <returns>The new instance of the melee combat actor.</returns>
-        public static MeleeCombatActor MakeActor()
+        public static MeleeCombatActor MakeActor(Transform transform)
         {
             var states = new Dictionary<State, IState>();
-            var actor = new MeleeCombatActor(states);
+            var actor = new MeleeCombatActor(transform, states);
 
+            states.Add(State.Disabled, new DisabledState(actor));
+            states.Add(State.Traveling, new TravelingState(actor, 20f, 1f));
 
             return actor;
+        }
+
+        public override sealed void EvaluateStateChange()
+        {
+            List<Commander> enemies = GetOpposingCommanders();
+
+            List<BaseDistancePair> nearBases = GetBasesByProximity(enemies);
+
+            ((TravelingState)this[State.Traveling]).Target =
+                GetOpposingCommanders()[0].Bases[0].Transform;
+            CurrentState = State.Traveling;
         }
         #region Melee Actor Properties
         /// <summary>

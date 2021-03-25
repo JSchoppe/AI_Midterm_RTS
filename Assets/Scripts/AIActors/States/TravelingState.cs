@@ -93,6 +93,10 @@ namespace AI_Midterm_RTS.AIActors.States
             // Initialize and listen to actor speed.
             actor.SpeedFactorChanged += OnSpeedFactorChanged;
             OnSpeedFactorChanged(actor.SpeedFactor);
+            // Ensure proper navigator state.
+            actor.Navigator.IsPaused = false;
+            actor.Navigator.Target =
+                Target ? Target.position : Vector3.zero;
         }
         public override sealed void StateExited()
         {

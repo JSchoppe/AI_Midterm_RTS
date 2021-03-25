@@ -17,19 +17,20 @@ namespace AI_Midterm_RTS.AIActors.RangedCombatActor
         private float shotSpeed;
         private float shotDamage;
         #endregion
-        private RangedCombatActor(Dictionary<State, IState> states)
-            : base(states)
+        private RangedCombatActor(Transform transform, Dictionary<State, IState> states)
+            : base(transform, states)
         {
             type = CombatActorType.Ranged;
         }
         /// <summary>
         /// Creates a new ranged combat actor with default values.
         /// </summary>
+        /// <param name="transform">The transform to attach the actor to.</param>
         /// <returns>The new instance of the ranged combat actor.</returns>
-        public static RangedCombatActor MakeActor()
+        public static RangedCombatActor MakeActor(Transform transform)
         {
             var states = new Dictionary<State, IState>();
-            var actor = new RangedCombatActor(states);
+            var actor = new RangedCombatActor(transform, states);
 
 
             return actor;

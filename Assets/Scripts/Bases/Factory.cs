@@ -31,11 +31,11 @@ namespace AI_Midterm_RTS.Bases
         /// Creates a new factory with the given building attributes.
         /// Fills in factory attributes with default values.
         /// </summary>
-        /// <param name="position">The position of the base in 3D space.</param>
+        /// <param name="transform">The transform tied to the base.</param>
         /// <param name="damageRadius">The radius in which attacks are considered damaging.</param>
         /// <param name="health">The starting health of the base.</param>
-        public Factory(Vector3 position, float damageRadius, float health)
-            : base(position, damageRadius, health)
+        public Factory(Transform transform, float damageRadius, float health)
+            : base(transform, damageRadius, health)
         {
             lastInstantiationTime = 0f;
             isCreatingUnit = false;

@@ -1,5 +1,5 @@
 ﻿using System;
-using UnityEngine; // TODO wrap Vector3, script should be engine agnostic.
+using UnityEngine; // TODO wrap Vector3 and Transform, script should be engine agnostic.
 
 using AI_Midterm_RTS.Indicators;
 
@@ -11,6 +11,7 @@ namespace AI_Midterm_RTS.Bases
     public class Base
     {
         #region Fields
+        private Transform transform;
         private bool isDestroyed;
         private float health;
         private float maxHealth;
@@ -20,12 +21,12 @@ namespace AI_Midterm_RTS.Bases
         /// <summary>
         /// Creates a new base with the given geographic and health properties.
         /// </summary>
-        /// <param name="position">The position of the base in 3D space.</param>
+        /// <param name="transform">The transform of the base in 3D space.</param>
         /// <param name="damageRadius">The radius in which attacks are considered damaging.</param>
         /// <param name="health">The starting health of the base.</param>
-        public Base(Vector3 position, float damageRadius, float health)
+        public Base(Transform transform, float damageRadius, float health)
         {
-            Location = position;
+            this.transform = transform;
             // Squared is exposed so that distance calculations
             // can be performed faster per AI instance.
             DamageRadiusSquared = damageRadius * damageRadius;
@@ -57,9 +58,13 @@ namespace AI_Midterm_RTS.Bases
         /// </summary>
         public byte TeamID { get; set; }
         /// <summary>
+        /// The transform tied to this base.
+        /// </summary>
+        public Transform Transform => transform;
+        /// <summary>
         /// The location of this base in 3D space.
         /// </summary>
-        public Vector3 Location { get; private set; }
+        public Vector3 Location => transform.position;
         /// <summary>
         /// The squared damage radius of this base.
         /// </summary>
