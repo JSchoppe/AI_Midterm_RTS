@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine; // TODO wrap Mathf. Script should be engine agnostic.
 
 using AI_Midterm_RTS.AICore;
+using AI_Midterm_RTS.AICore.Distributions;
 using AI_Midterm_RTS.Indicators;
 using AI_Midterm_RTS.Navigation;
 using AI_Midterm_RTS.Commanders;
-using AI_Midterm_RTS.AICore.Distributions;
 using AI_Midterm_RTS.Bases;
+using AI_Midterm_RTS.AIActors.States;
 
 namespace AI_Midterm_RTS.AIActors
 {
@@ -107,6 +108,29 @@ namespace AI_Midterm_RTS.AIActors
         /// Dictates the likeliness of state changes.
         /// </summary>
         public WeightedTable<State> StateTable { get; set; }
+        /// <summary>
+        /// The target actor of the current state (if applicable).
+        /// </summary>
+        public CombatActor TargetActor
+        {
+            get
+            {
+                // If the current state targets an actor
+                // then return that actor.
+                if (this[CurrentState] is TargetedActorState state)
+                    return state.Target;
+                else
+                    return null;
+            }
+            set
+            {
+                // TODO this is kind of sloppy.
+                // Apply the target to all relevent states.
+                foreach (IState state in states.Values)
+                    if (state is TargetedActorState targetState)
+                        targetState.Target = value;
+            }
+        }
         /// <summary>
         /// The location of this actor. Setting this value
         /// directly will teleport the actor.
@@ -242,15 +266,57 @@ namespace AI_Midterm_RTS.AIActors
         /// Called whenever a state wants the actor to consider
         /// changing to a different state.
         /// </summary>
-        public virtual void EvaluateStateChange()
+        public void EvaluateStateChange()
         {
+            // Get some information about the nearby environment.
+            List<Commander> enemies = GetOpposingCommanders();
+            List<Commander> allies = new List<Commander> { GetCommander() };
+            List<BaseDistancePair> nearEnemyBases = GetBasesByProximity(enemies);
+            List<ActorDistancePair> nearEnemies = GetUnitsByProximity(enemies);
+            List<BaseDistancePair> nearAlliedBases = GetBasesByProximity(allies);
+            List<ActorDistancePair> nearAlliedActors = GetUnitsByProximity(allies);
+            // Apply special adjustments to the weight table.
+            // These mask out state that can't be achieved in
+            // the current map context.
+            WeightedTable<State> adjustedTable = StateTable.Clone();
+            if (nearEnemies.Count == 0)
+            {
+                adjustedTable.SetCoefficient(State.AttackingUnit, 0f);
+                adjustedTable.SetCoefficient(State.Taunting, 0f);
+            }
+            if (nearEnemyBases.Count == 0)
+                adjustedTable.SetCoefficient(State.AttackingBuilding, 0f);
+            if (nearAlliedBases.Count == 0)
+                adjustedTable.SetCoefficient(State.DefendingBuilding, 0f);
 
+            // Pull the next state based on considerations.
+            State nextState = adjustedTable.Next();
+            switch (nextState)
+            {
+                case State.AttackingBuilding:
+                    // Attack the nearest base.
+                    ((TargetedBaseState)this[nextState]).Target = nearEnemyBases[0].Base;
+                    break;
+                case State.AttackingUnit:
+                    // Attack the nearest unit.
+                    ((TargetedActorState)this[nextState]).Target = nearEnemies[0].Actor;
+                    break;
+                case State.DefendingBuilding:
+                    // Defend the nearest base.
+                    ((TargetedBaseState)this[nextState]).Target = nearAlliedBases[0].Base;
+                    break;
+                case State.Taunting:
+                    // Taunt the nearest unit.
+                    ((TargetedActorState)this[nextState]).Target = nearEnemies[0].Actor;
+                    break;
+            }
+            CurrentState = nextState;
         }
         /// <summary>
         /// Iterates and returns the opponent commanders.
         /// </summary>
         /// <returns>A collection of the opponent commanders.</returns>
-        protected List<Commander> GetOpposingCommanders()
+        public List<Commander> GetOpposingCommanders()
         {
             List<Commander> opponents = new List<Commander>();
             foreach (Commander commander in Commander.AllCommanders)
@@ -259,11 +325,23 @@ namespace AI_Midterm_RTS.AIActors
             return opponents;
         }
         /// <summary>
+        /// Retrieves a commander for this TeamID.
+        /// </summary>
+        /// <returns>The first commander that is on this team.</returns>
+        public Commander GetCommander()
+        {
+            // TODO this is bad. Make this a prop.
+            foreach (Commander commander in Commander.AllCommanders)
+                if (commander.TeamID == TeamID)
+                    return commander;
+            return default;
+        }
+        /// <summary>
         /// Retrieves a collection of opponents sorted by proximity.
         /// </summary>
         /// <param name="commanders">The commanders to check units in.</param>
         /// <returns>A collection of actor distance data with closest actors first.</returns>
-        protected List<ActorDistancePair> GetUnitsByProximity(List<Commander> commanders)
+        public List<ActorDistancePair> GetUnitsByProximity(List<Commander> commanders)
         {
             List<ActorDistancePair> opponents = new List<ActorDistancePair>();
             // Iterate through all combat actors.
@@ -298,7 +376,7 @@ namespace AI_Midterm_RTS.AIActors
         /// </summary>
         /// <param name="commanders">The commanders to check bases in.</param>
         /// <returns>A collection of base distance data with closest bases first.</returns>
-        protected List<BaseDistancePair> GetBasesByProximity(List<Commander> commanders)
+        public List<BaseDistancePair> GetBasesByProximity(List<Commander> commanders)
         {
             List<BaseDistancePair> bases = new List<BaseDistancePair>();
             // Iterate through all bases on given commanders.
@@ -329,7 +407,7 @@ namespace AI_Midterm_RTS.AIActors
             return bases;
         }
         // TODO document or clean up somehow.
-        protected sealed class ActorDistancePair
+        public sealed class ActorDistancePair
         {
             public CombatActor Actor { get; }
             public float DistanceSquared { get; }
@@ -339,7 +417,7 @@ namespace AI_Midterm_RTS.AIActors
                 DistanceSquared = distanceSquared;
             }
         }
-        protected sealed class BaseDistancePair
+        public sealed class BaseDistancePair
         {
             public Base Base { get; }
             public float DistanceSquared { get; }

@@ -4,7 +4,7 @@ using UnityEngine; // TODO wrap Mathf. Script should be engine agnostic.
 
 using AI_Midterm_RTS.AICore;
 
-namespace AI_Midterm_RTS.AIActors.JoustingCombatActor
+namespace AI_Midterm_RTS.AIActors
 {
     /// <summary>
     /// A combat actor that employs jousting attacks.

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 using AI_Midterm_RTS.AIActors;
-using AI_Midterm_RTS.AIActors.MeleeCombatActor;
 
 namespace AI_Midterm_RTS.Designer.Instances
 {
@@ -33,6 +32,13 @@ namespace AI_Midterm_RTS.Designer.Instances
                 attackDelay = float.Epsilon;
             if (attackDamage < 0f)
                 attackDamage = 0f;
+        }
+        #endregion
+        #region MonoBehaviour Tick Relay
+        private void FixedUpdate()
+        {
+            if (instance != null)
+                instance.Tick(Time.fixedDeltaTime);
         }
         #endregion
         #region IEditorWrapper Implementation

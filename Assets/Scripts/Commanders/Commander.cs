@@ -108,6 +108,7 @@ namespace AI_Midterm_RTS.Commanders
         {
             // Add the new units.
             deployedUnits.Add(actorToRegister);
+            actorToRegister.TeamID = TeamID;
             // Listen to this new unit.
             actorToRegister.ActorDefeated += OnActorDefeated;
             // Update the unit counts.

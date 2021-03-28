@@ -3,55 +3,41 @@ using System.Collections.Generic;
 using UnityEngine; // TODO wrap Mathf. Script should be engine agnostic.
 
 using AI_Midterm_RTS.AICore;
-using AI_Midterm_RTS.AIActors.States;
-using AI_Midterm_RTS.Commanders;
 
-namespace AI_Midterm_RTS.AIActors.MeleeCombatActor
+namespace AI_Midterm_RTS.AIActors
 {
     /// <summary>
-    /// A combat actor that uses melee attacks.
+    /// A combat actor that uses ranged attacks.
     /// </summary>
-    public sealed class MeleeCombatActor : CombatActor
+    public sealed class RangedCombatActor : CombatActor
     {
         #region Fields
         private float range;
-        private float attackDelay;
-        private float attackDamage;
+        private float fireDelay;
+        private float shotSpeed;
+        private float shotDamage;
         #endregion
-        private MeleeCombatActor(Transform transform, Dictionary<State, IState> states)
+        private RangedCombatActor(Transform transform, Dictionary<State, IState> states)
             : base(transform, states)
         {
-            type = CombatActorType.Melee;
+            type = CombatActorType.Ranged;
         }
         /// <summary>
-        /// Creates a new melee combat actor with default values.
+        /// Creates a new ranged combat actor with default values.
         /// </summary>
         /// <param name="transform">The transform to attach the actor to.</param>
-        /// <returns>The new instance of the melee combat actor.</returns>
-        public static MeleeCombatActor MakeActor(Transform transform)
+        /// <returns>The new instance of the ranged combat actor.</returns>
+        public static RangedCombatActor MakeActor(Transform transform)
         {
             var states = new Dictionary<State, IState>();
-            var actor = new MeleeCombatActor(transform, states);
+            var actor = new RangedCombatActor(transform, states);
 
-            states.Add(State.Disabled, new DisabledState(actor));
-            states.Add(State.Traveling, new TravelingState(actor, 20f, 1f));
 
             return actor;
         }
-
-        public override sealed void EvaluateStateChange()
-        {
-            List<Commander> enemies = GetOpposingCommanders();
-
-            List<BaseDistancePair> nearBases = GetBasesByProximity(enemies);
-
-            ((TravelingState)this[State.Traveling]).Target =
-                GetOpposingCommanders()[0].Bases[0].Transform;
-            CurrentState = State.Traveling;
-        }
-        #region Melee Actor Properties
+        #region Ranged Actor Properties
         /// <summary>
-        /// The current melee range of this unit.
+        /// The current range of this unit.
         /// </summary>
         public float Range
         {
@@ -69,38 +55,56 @@ namespace AI_Midterm_RTS.AIActors.MeleeCombatActor
             }
         }
         /// <summary>
-        /// The current attack delay of this unit.
+        /// The current fire delay of this unit.
         /// </summary>
-        public float AttackDelay
+        public float FireDelay
         {
-            get => attackDelay;
+            get => fireDelay;
             set
             {
                 // Fire delay must be positive.
                 value = Mathf.Max(value, float.Epsilon);
-                if (value != attackDelay)
+                if (value != fireDelay)
                 {
-                    attackDelay = value;
+                    fireDelay = value;
                     // Notify if delay changed.
-                    AttackDelayChanged?.Invoke(attackDelay);
+                    FireDelayChanged?.Invoke(fireDelay);
+                }
+            }
+        }
+        /// <summary>
+        /// The current shot speed of this unit.
+        /// </summary>
+        public float ShotSpeed
+        {
+            get => shotSpeed;
+            set
+            {
+                // Fire speed must be positive.
+                value = Mathf.Max(value, float.Epsilon);
+                if (value != shotSpeed)
+                {
+                    shotSpeed = value;
+                    // Notify if shot speed changed.
+                    ShotSpeedChanged?.Invoke(shotSpeed);
                 }
             }
         }
         /// <summary>
         /// The current shot damage of this unit.
         /// </summary>
-        public float AttackDamage
+        public float ShotDamage
         {
-            get => attackDamage;
+            get => shotDamage;
             set
             {
                 // Shot damage cannot be negative.
                 value = Mathf.Max(value, 0f);
-                if (value != attackDamage)
+                if (value != shotDamage)
                 {
-                    attackDamage = value;
+                    shotSpeed = value;
                     // Notify if shot damage changed.
-                    AttackDamageChanged?.Invoke(attackDamage);
+                    ShotDamageChanged?.Invoke(shotDamage);
                 }
             }
         }
@@ -113,11 +117,15 @@ namespace AI_Midterm_RTS.AIActors.MeleeCombatActor
         /// <summary>
         /// Called every time the unit fire delay changes.
         /// </summary>
-        public event Action<float> AttackDelayChanged;
+        public event Action<float> FireDelayChanged;
+        /// <summary>
+        /// Called every time the unit shot speed changes.
+        /// </summary>
+        public event Action<float> ShotSpeedChanged;
         /// <summary>
         /// Called every time the unit shot damage changes.
         /// </summary>
-        public event Action<float> AttackDamageChanged;
+        public event Action<float> ShotDamageChanged;
         #endregion
     }
 }

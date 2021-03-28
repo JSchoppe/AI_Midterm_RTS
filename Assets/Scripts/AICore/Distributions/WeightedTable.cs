@@ -88,6 +88,7 @@ namespace AI_Midterm_RTS.AICore.Distributions
             // Add the new element.
             weights.Add(weight);
             results.Add(result);
+            coefficients.Add(1f);
         }
         /// <summary>
         /// Removes a result from the table if it exists in the table.
@@ -176,14 +177,14 @@ namespace AI_Midterm_RTS.AICore.Distributions
             // Create a new table to copy into.
             WeightedTable<T> clone = new WeightedTable<T>();
             // Clone the values for the underlying table.
-            clone.weights = new List<float>(weights.Count);
-            clone.results = new List<T>(results.Count);
-            clone.coefficients = new List<float>(coefficients.Count);
+            clone.weights = new List<float>();
+            clone.results = new List<T>();
+            clone.coefficients = new List<float>();
             for (int i = 0; i < weights.Count; i++)
             {
-                clone.weights[i] = weights[i];
-                clone.results[i] = results[i];
-                clone.coefficients[i] = coefficients[i];
+                clone.weights.Add(weights[i]);
+                clone.results.Add(results[i]);
+                clone.coefficients.Add(coefficients[i]);
             }
             // Return the new unassociated clone.
             return clone;

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 using AI_Midterm_RTS.AIActors;
-using AI_Midterm_RTS.AIActors.JoustingCombatActor;
 
 namespace AI_Midterm_RTS.Designer.Instances
 {

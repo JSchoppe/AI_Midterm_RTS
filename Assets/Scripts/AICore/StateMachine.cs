@@ -10,7 +10,7 @@ namespace AI_Midterm_RTS.AICore
     public abstract class StateMachine<TStateKey> : ITickable
     {
         #region State Fields
-        private readonly Dictionary<TStateKey, IState> states;
+        protected readonly Dictionary<TStateKey, IState> states;
         private TStateKey currentState;
         #endregion
         #region Constructors
